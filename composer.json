@@ -1,0 +1,19 @@
+{
+    "name": "sebastian/fixer-api-fx-converter",
+    "type": "plugin",
+    "autoload": {
+        "psr-4": {
+            "Sebastian\\FixerApiFxConverter\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sebastian Gomez",
+            "email": "sebasgomez5892@gmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^6.6",
+        "guzzlehttp/guzzle": "^7.4"
+    }
+}
