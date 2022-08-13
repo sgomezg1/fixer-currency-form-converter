@@ -8,7 +8,7 @@ class loadView
     {
         header("Content-type", "application/json");
         $this->defaultCurrency = "GBP";
-        add_shortcode('creating_form', array($this, "getFormView"));
+        add_shortcode('fixer-converter-form', array($this, "getFormView"));
         add_action('rest_api_init', function () {
             register_rest_route(
                 'c',
