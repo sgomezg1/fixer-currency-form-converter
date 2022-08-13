@@ -28,8 +28,8 @@ class sendEmail
 
     public function send()
     {
-        $this->mail->setFrom("info@web-html.com", 'Access Bureau Mailing');
-        $this->mail->addAddress("sebasgomez5892@gmail.com", "Sebastian Gomez");
+        $this->mail->setFrom("YOUR-FROM-EMAIL", 'FROM-NAME');
+        $this->mail->addAddress("RECIPIENT-ADDRESS", "RECIPIENT-NAME");
         $this->mail->isHTML(true);
         $this->mail->Subject = $this->subject;
         $this->mail->Body    = $this->message;
