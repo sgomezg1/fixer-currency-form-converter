@@ -3,10 +3,12 @@
 class loadView
 {
     public $defaultCurrency;
+    public $dataForConversion;
 
     public function __construct()
     {
         header("Content-type", "application/json");
+        $this->dataForConversion = json_decode(file_get_contents(WP_PLUGIN_DIR . "/fixer-api-fx-converter/js/sample-data.json"));
         $this->defaultCurrency = "GBP";
         add_shortcode('fixer-converter-form', array($this, "getFormView"));
         add_action('rest_api_init', function () {
@@ -67,16 +69,6 @@ class loadView
         return json_decode($response);
     }
 
-    private function getCountries($endpoint)
-    {
-        try {
-            $api = $this->getApiRequest("GET", $endpoint);
-            return $api->symbols;
-        } catch (Exception $e) {
-            return json_encode(["success" => false, "error" => $e->getMessage()]);
-        }
-    }
-
     private function getLatest($endpoint)
     {
         try {
@@ -90,6 +82,7 @@ class loadView
     private function getConversion($endpoint)
     {
         try {
+            $
             $api = $this->getApiRequest("GET", $endpoint);
             return $api->result;
         } catch (Exception $e) {
@@ -99,7 +92,7 @@ class loadView
 
     public function getFormView()
     {
-        $countries = $this->getCountries("/symbols");
+        $countries = $this->dataForConversion;
         $eurToGbr = $this->getLatest("/latest?symbols=EUR&base=" . $this->defaultCurrency);
         $eurToGbr = number_format((float)$eurToGbr->EUR, 3, '.', '');
         require_once(WP_PLUGIN_DIR . "/fixer-api-fx-converter/views/currency-form.php");

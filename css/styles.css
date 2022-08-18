@@ -28,7 +28,8 @@
     width: 50%;
 }
 
-#to {
+#to,
+#from {
     width: 100%;
     height: 50px;
 }

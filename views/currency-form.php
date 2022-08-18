@@ -18,10 +18,20 @@
         <hr>
         <h4>Conversion info:</h4>
         <div class="currency-to-convert">
+            <label for="from">From</label>
+            <select name="from" id="from" required>
+                <option value="">-- Select an option --</option>
+                <? foreach ($countries as $c) { ?>
+                    <option value="<? echo $c->code; ?>"><? echo $c->code; ?></option>
+                <? } ?>
+            </select>
+        </div>
+        <div class="currency-to-convert">
+            <label for="to">To</label>
             <select name="to" id="to" required>
                 <option value="">-- Select an option --</option>
-                <? foreach ($countries as $code => $country) { ?>
-                    <option value="<? echo $code; ?>">(<? echo $code; ?>) - <? echo $country; ?> </option>
+                <? foreach ($countries as $c) { ?>
+                    <option value="<? echo $c->code; ?>"><? echo $c->code; ?></option>
                 <? } ?>
             </select>
         </div>
