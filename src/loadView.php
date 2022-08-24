@@ -105,7 +105,8 @@ class loadView
         );
         $total = $mappedArray[0]->buy * $amount;
         if ($operation === 'selling') {
-            $total = $mappedArray[0]->sell * $amount;
+            $rate = 1 / $mappedArray[0]->sell;
+            $total = $rate * $amount;
         }
         return number_format((float)$total, 2, '.', '');
     }

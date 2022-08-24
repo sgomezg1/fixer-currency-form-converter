@@ -20,11 +20,11 @@
         <div class="currency-to-convert">
             <div class="radio-buttons">
                 <input type="radio" name="operation" class = "operation" id = "buying" value="buying" checked = "checked">
-                <label for = "buying">GBP to Currency</label>
+                <label for = "buying">Buying</label>
             </div>
             <div class="radio-buttons">
                 <input type="radio" name="operation" class = "operation" id = "selling" value="selling">
-                <label for = "selling">Currency to GBP</label>
+                <label for = "selling">Selling</label>
             </div>
         </div>
         <div class="currency-to-convert">
@@ -38,8 +38,8 @@
         </div>
         <div class="currency-container">
             <div class="currency-subcontainer">
-                You pay<br>
-                <span class="big-font">GBR</span>
+                <span class = "phrase-selling-buying">You pay</span><br>
+                <span class="big-font currency-code-text">GBP</span>
             </div>
             <div class="currency-subcontainer align-right">
                 <input class="form-inputs align-right" type="number" name="amount" id = "amount" placeholder = "Quantity" required>

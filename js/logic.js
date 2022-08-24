@@ -11,11 +11,35 @@ $(document).ready(function() {
         $("#order-type").val("collection");
     });
 
+    $(".operation").change(function(e) {
+        if (e.target.value === 'selling') {
+            $(".phrase-selling-buying").empty();
+            $(".phrase-selling-buying").append("You sell");
+        } else {
+            $(".phrase-selling-buying").empty();
+            $(".phrase-selling-buying").append("You buy");
+        }
+        $("#to").val("")
+        $("#amount").val("")
+        $(".currency-result").empty();;
+        $("#currency-conversion-result").val("");
+    })
+
+    $("#to").change(function(e) {
+        if ($("input[name='operation']:checked").val() === "selling") {
+            $(".currency-code-text").empty();
+            $(".currency-code-text").append(e.target.value);
+        } else {
+            $(".currency-code-text").empty();
+            $(".currency-code-text").append("GBP");
+        }
+    })
+
     $("#amount").keyup(
-        $.debounce(250, function(e) {
+        $.debounce(1000, function(e) {
             if ($("#to").val() !== "") {
                 $.ajax({
-                    url: `/wp-json/c/get?to=${$("#to").val()}&amount=${$(this).val()}&operation=${$(".operation").val()}`,
+                    url: `/wp-json/c/get?to=${$("#to").val()}&amount=${$(this).val()}&operation=${$("input[name='operation']:checked").val()}`,
                     type: "GET",
                     dataType: "json",
                     success: function(response) {
