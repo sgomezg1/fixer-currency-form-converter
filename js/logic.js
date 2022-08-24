@@ -11,40 +11,15 @@ $(document).ready(function() {
         $("#order-type").val("collection");
     });
 
-    $("#to").change(function(e) {
-        $(".currency-selected").empty();
-        $(".currency-selected").append($(this).val());
-        $("#amount").val("");
-        $(".currency-result").empty();
-        $.ajax({
-            url: `/wp-json/c/latest?to=${$(this).val()}`,
-            type: "GET",
-            dataType: "json",
-            success: function(response) {
-                $(".latest-rate").empty();
-                $(".latest-rate").append(
-                    parseFloat(response[$("#to").val()]).toFixed(3)
-                );
-            },
-            error: function(error) {
-                console.log(error);
-            },
-        });
-    });
-
     $("#amount").keyup(
         $.debounce(250, function(e) {
             if ($("#to").val() !== "") {
                 $.ajax({
-                    url: `/wp-json/c/get?to=${$("#to").val()}&amount=${$(this).val()}`,
+                    url: `/wp-json/c/get?to=${$("#to").val()}&amount=${$(this).val()}&operation=${$(".operation").val()}`,
                     type: "GET",
                     dataType: "json",
                     success: function(response) {
                         const resp = JSON.parse(response);
-                        $(".latest-rate").empty();
-                        $(".latest-rate").append(
-                            parseFloat(resp.latest[$("#to").val()]).toFixed(3)
-                        );
                         $(".currency-result").empty();
                         $(".currency-result").append(resp.conversion);
 

@@ -16,32 +16,25 @@
             <input type = "text" class = "form-inputs" name = "address" id = "address" placeholder="Address" required minlength = "6">
         </div>
         <hr>
-        <h4>Conversion info:</h4>
+        <h4>Select an operation:</h4>
         <div class="currency-to-convert">
-            <label for="from">From</label>
-            <select name="from" id="from" required>
-                <option value="">-- Select an option --</option>
-                <? foreach ($countries as $c) { ?>
-                    <option value="<? echo $c->code; ?>"><? echo $c->code; ?></option>
-                <? } ?>
-            </select>
+            <div class="radio-buttons">
+                <input type="radio" name="operation" class = "operation" id = "buying" value="buying" checked = "checked">
+                <label for = "buying">GBP to Currency</label>
+            </div>
+            <div class="radio-buttons">
+                <input type="radio" name="operation" class = "operation" id = "selling" value="selling">
+                <label for = "selling">Currency to GBP</label>
+            </div>
         </div>
         <div class="currency-to-convert">
-            <label for="to">To</label>
+            <label for="to">Currency</label>
             <select name="to" id="to" required>
                 <option value="">-- Select an option --</option>
                 <? foreach ($countries as $c) { ?>
-                    <option value="<? echo $c->code; ?>"><? echo $c->code; ?></option>
+                    <option value="<? echo $c['code']; ?>"><? echo $c['country'] . " (" . $c['code'] . ")"; ?></option>
                 <? } ?>
             </select>
-        </div>
-        <div class="currency-container">
-            <div class="currency-subcontainer">
-                <h3 class="widget-header">Exchange Rate</h3>
-            </div>
-            <div class="currency-subcontainer align-right">
-                <span class="big-font latest-rate"><? echo $eurToGbr; ?></span>Per 1 GBP
-            </div>
         </div>
         <div class="currency-container">
             <div class="currency-subcontainer">

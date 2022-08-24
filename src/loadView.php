@@ -4,10 +4,66 @@ class loadView
 {
     public $defaultCurrency;
     public $dataForConversion;
+    public $arrCountries;
 
     public function __construct()
     {
         header("Content-type", "application/json");
+        $this->arrCountries = array(
+            [
+                "code" => "EUR",
+                "country" => "Euro"
+            ],
+            [
+                "code" => "USD",
+                "country" => "USA"
+            ],
+            [
+                "code" => "AED",
+                "country" => "Dubai"
+            ],
+            [
+                "code" => "TRY",
+                "country" => "Turkey"
+            ],
+            [
+                "code" => "HRK",
+                "country" => "Croatia"
+            ],
+            [
+                "code" => "HUF",
+                "country" => "Hungary"
+            ],
+            [
+                "code" => "CAD",
+                "country" => "Canada"
+            ],
+            [
+                "code" => "THB",
+                "country" => "Thailand"
+            ],
+            [
+                "code" => "PLN",
+                "country" => "Poland"
+            ],
+            [
+                "code" => "NOK",
+                "country" => "Norway"
+            ],
+            [
+                "code" => "INR",
+                "country" => "India"
+            ],
+            [
+                "code" => "CZK",
+                "country" => "Czech"
+            ],
+            [
+                "code" => "HKD",
+                "country" => "Hong Kong"
+            ]
+        );
+
         $this->dataForConversion = json_decode(file_get_contents(WP_PLUGIN_DIR . "/fixer-api-fx-converter/js/sample-data.json"));
         $this->defaultCurrency = "GBP";
         add_shortcode('fixer-converter-form', array($this, "getFormView"));
@@ -30,14 +86,6 @@ class loadView
             );
             register_rest_route(
                 'c',
-                '/latest/',
-                array(
-                    'methods' => 'GET',
-                    'callback' => array($this, "api_get_latest_currency")
-                )
-            );
-            register_rest_route(
-                'c',
                 '/mail/',
                 array(
                     'methods' => 'POST',
@@ -47,54 +95,24 @@ class loadView
         });
     }
 
-    private function getApiRequest($method, $endpoint)
-    {
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => APIURL . $endpoint,
-            CURLOPT_HTTPHEADER => array(
-                "Content-Type: text/plain",
-                "apikey: " . CREDENTIALS['api-key'] . ""
-            ),
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => $method
-        ));
 
-        $response = curl_exec($curl);
-        return json_decode($response);
-    }
-
-    private function getLatest($endpoint)
+    private function getConversion($to, $amount, $operation)
     {
-        try {
-            $api = $this->getApiRequest("GET", $endpoint);
-            return $api->rates;
-        } catch (Exception $e) {
-            return json_encode(["success" => false, "error" => $e->getMessage()]);
+        $mappedArray = array_values(
+            array_filter($this->dataForConversion, function ($e) use ($to) {
+                return $e->code === $to;
+            })
+        );
+        $total = $mappedArray[0]->buy * $amount;
+        if ($operation === 'selling') {
+            $total = $mappedArray[0]->sell * $amount;
         }
-    }
-
-    private function getConversion($endpoint)
-    {
-        try {
-            $
-            $api = $this->getApiRequest("GET", $endpoint);
-            return $api->result;
-        } catch (Exception $e) {
-            return json_encode(["success" => false, "error" => $e->getMessage()]);
-        }
+        return number_format((float)$total, 2, '.', '');
     }
 
     public function getFormView()
     {
-        $countries = $this->dataForConversion;
-        $eurToGbr = $this->getLatest("/latest?symbols=EUR&base=" . $this->defaultCurrency);
-        $eurToGbr = number_format((float)$eurToGbr->EUR, 3, '.', '');
+        $countries = $this->arrCountries;
         require_once(WP_PLUGIN_DIR . "/fixer-api-fx-converter/views/currency-form.php");
     }
 
@@ -102,16 +120,9 @@ class loadView
     {
         $to = $_REQUEST['to'];
         $amount = $_REQUEST['amount'];
-        $conversion = $this->getConversion("/convert?to=" . $to . "&from=" . $this->defaultCurrency . "&amount=" . $amount);
-        $latest = $this->getLatest("/latest?symbols=" . $to . "&base=" . $this->defaultCurrency);
-        return json_encode(["conversion" => number_format((float)$conversion, 2, '.', ''), "latest" => $latest]);
-    }
-
-    public function api_get_latest_currency()
-    {
-        $to = $_REQUEST['to'];
-        $latest = $this->getLatest("/latest?symbols=" . $to . "&base=" . $this->defaultCurrency);
-        return $latest;
+        $operation = $_REQUEST['operation'];
+        $conversion = $this->getConversion($to, $amount, $operation);
+        return json_encode(["conversion" => $conversion]);
     }
 
     public function api_send_email_for_converter_request()
@@ -134,13 +145,12 @@ class loadView
                 </p>
             ";
             $mail = new sendEmail(
-                "Receiving currency (".$_POST["to"].") request",
-               $htmlMessage,
+                "Receiving currency (" . $_POST["to"] . ") request",
+                $htmlMessage,
             );
             $mail->send();
             return json_encode(["success" => true, "message" => "Email has been sent successfully. We'll be in touch wiht you as soon as possible."]);
         } catch (Exception $e) {
-            // return json_encode(["success" => false, "message" => $e->getMessage(), "detail" => $this->mail->ErrorInfo]);
             return json_encode(["success" => false, "message" => $e->getMessage()]);
         }
     }
