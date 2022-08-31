@@ -103,12 +103,14 @@ class loadView
                 return $e->code === $to;
             })
         );
-        $total = $mappedArray[0]->buy * $amount;
+        $total = round($mappedArray[0]->buy, 2) * $amount;
         if ($operation === 'selling') {
-            $rate = 1 / $mappedArray[0]->sell;
+            $rate = 1 / round($mappedArray[0]->sell, 2);
             $total = $rate * $amount;
+            return array(number_format((float)$total, 2, '.', ''), round($mappedArray[0]->sell, 2));
+        } else {
+            return array(number_format((float)$total, 2, '.', ''), round($mappedArray[0]->buy, 2));
         }
-        return number_format((float)$total, 2, '.', '');
     }
 
     public function getFormView()
@@ -123,7 +125,7 @@ class loadView
         $amount = $_REQUEST['amount'];
         $operation = $_REQUEST['operation'];
         $conversion = $this->getConversion($to, $amount, $operation);
-        return json_encode(["conversion" => $conversion]);
+        return json_encode(["conversion" => $conversion[0], "rate" => $conversion[1]]);
     }
 
     public function api_send_email_for_converter_request()
@@ -133,20 +135,20 @@ class loadView
             $htmlMessage = "
                 <h2>Hello. You've received a request from buy currency form. This is the client data:</h2>
                 <p>
-                    <strong>Name:</strong> " . $_POST['name'] . "<br>
-                    <strong>Email:</strong> " . $_POST['email'] . "<br>
-                    <strong>Phone Number:</strong> " . $_POST['phone'] . "<br>
-                    <strong>Address:</strong> " . $_POST['address'] . "
+                    <strong>Name:</strong> " . htmlspecialchars($_POST['name']) . "<br>
+                    <strong>Email:</strong> " . htmlspecialchars($_POST['email']) . "<br>
+                    <strong>Phone Number:</strong> " . htmlspecialchars($_POST['phone']) . "<br>
+                    <strong>Address:</strong> " . htmlspecialchars($_POST['address']) . "
                 </p>
                 <h3>So. Here is the conversion request:</h3>
                 <p>
-                    <strong>Currency:</strong> " . $_POST['to'] . "<br>
-                    <strong>Amount:</strong> " . $_POST['currency-conversion-result'] . "<br>
-                    <strong>Delivery Method:</strong> " . $_POST['order-type'] . "<br><br>
+                    <strong>Currency:</strong> " . htmlspecialchars($_POST['to']) . "<br>
+                    <strong>Amount:</strong> " . htmlspecialchars($_POST['currency-conversion-result']) . "<br>
+                    <strong>Delivery Method:</strong> " . htmlspecialchars($_POST['order-type']) . "<br><br>
                 </p>
             ";
             $mail = new sendEmail(
-                "Receiving currency (" . $_POST["to"] . ") request",
+                "Receiving currency (" . htmlspecialchars($_POST["to"]) . ") request",
                 $htmlMessage,
             );
             $mail->send();

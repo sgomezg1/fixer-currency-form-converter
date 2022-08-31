@@ -25,7 +25,7 @@
 }
 
 .currency-subcontainer {
-    width: 50%;
+    width: 33%;
 }
 
 #to,
@@ -43,9 +43,11 @@
 
 .currency-to-convert {
     margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
-.currency-submit {
+.currency-button {
     width: 100%;
     background-color: rgb(0, 59, 112);
     margin-top: 20px;
@@ -161,4 +163,35 @@
 .error {
     color: red !important;
     margin-top: 10px;
+    display: block;
+}
+
+.radio-buttons {
+    width: 50%;
+}
+
+.hide-show-form {
+    display: none;
+}
+
+.show-form {
+    display: flex;
+}
+
+input[type="radio"] {
+    -webkit-appearance: checkbox;
+    /* Chrome, Safari, Opera */
+    -moz-appearance: checkbox;
+    /* Firefox */
+    -ms-appearance: checkbox;
+    /* not currently supported */
+}
+
+.conversion-rate-value-one,
+.conversion-rate-value-two {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
 }
