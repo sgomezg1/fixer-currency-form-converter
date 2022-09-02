@@ -103,12 +103,14 @@ class loadView
                 return $e->code === $to;
             })
         );
-        $total = round($mappedArray[0]->buy, 2) * $amount;
+        
         if ($operation === 'selling') {
-            $rate = 1 / round($mappedArray[0]->sell, 2);
-            $total = $rate * $amount;
+            /* $rate = 1 / round($mappedArray[0]->sell, 2);
+            $total = $rate * $amount; */
+            $total = round($mappedArray[0]->sell, 2) * $amount;
             return array(number_format((float)$total, 2, '.', ''), round($mappedArray[0]->sell, 2));
         } else {
+            $total = round($mappedArray[0]->buy, 2) * $amount;
             return array(number_format((float)$total, 2, '.', ''), round($mappedArray[0]->buy, 2));
         }
     }

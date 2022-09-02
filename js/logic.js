@@ -9,13 +9,8 @@ $(document).ready(function() {
                 $(".currency-result").empty();
                 $(".currency-result").append(resp.conversion);
 
-                $(".conversion-rate-value-one").empty();
                 $(".conversion-rate-value-two").empty();
-                if ($("input[name='operation']:checked").val() === "buying") {
-                    $(".conversion-rate-value-one").append("X " + resp.rate);
-                } else {
-                    $(".conversion-rate-value-two").append("X " + resp.rate);
-                }
+                $(".conversion-rate-value-two").append("X " + resp.rate);
 
                 $("#currency-conversion-result").val(resp.conversion);
             },
@@ -43,32 +38,18 @@ $(document).ready(function() {
         if (e.target.value === "selling") {
             $(".phrase-selling-buying").empty();
             $(".phrase-selling-buying").append("Buy Travel Money");
-            $(".currency-selected").empty();
-            $(".currency-selected").append("GBP");
-            $(".currency-code-text").empty();
-            $(".currency-code-text").append("EUR");
         } else {
             $(".phrase-selling-buying").empty();
             $(".phrase-selling-buying").append("Buy Back Currency");
-            $(".currency-code-text").empty();
-            $(".currency-code-text").append("GBP");
-            $(".currency-selected").empty();
-            $(".currency-selected").append("EUR");
         }
         $("#amount").val("1000");
         $(".currency-result").empty();
-        $("#to").val("EUR");
         doConversion();
     });
 
     $("#to").change(function(e) {
-        if ($("input[name='operation']:checked").val() === "selling") {
-            $(".currency-code-text").empty();
-            $(".currency-code-text").append(e.target.value);
-        } else {
-            $(".currency-selected").empty();
-            $(".currency-selected").append(e.target.value);
-        }
+        $(".currency-selected").empty();
+        $(".currency-selected").append(e.target.value);
         doConversion()
     });
 
